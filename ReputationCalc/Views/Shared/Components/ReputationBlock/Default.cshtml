@@ -1,0 +1,56 @@
+﻿@model ReputationData.Reputation
+
+<div class="container">
+    <div class="card text-white bg-secondary mb-3" style="max-width: 540px;">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                <img src="~/img/hero.png" class="card-img" alt="...">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">Hero Reputation</h5>
+                    <div class="progress mt-1" style="height: 40px;">
+                        <div class="progress-bar text-dark"
+                             role="progressbar"
+                             style="width: @Model.Peasants%;"
+                             aria-valuenow="25"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            Peasants: @Model.Peasants %
+                        </div>
+                    </div>
+                    <div class="progress mt-1" style="height: 40px;">
+                        <div class="progress-bar text-dark"
+                             role="progressbar"
+                             style="width: @Model.Church%;"
+                             aria-valuenow="25"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            Church: @Model.Church %
+                        </div>
+                    </div>
+                    <div class="progress mt-1" style="height: 40px;">
+                        <div class="progress-bar text-dark"
+                             role="progressbar"
+                             style="width: @Model.Bandits%;"
+                             aria-valuenow="25"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            Bandits: @Model.Bandits %
+                        </div>
+                    </div>
+                    <div class="progress mt-1" style="height: 40px;">
+                        <div class="progress-bar text-dark"
+                             role="progressbar"
+                             style="width: @Model.Nobles%;"
+                             aria-valuenow="25"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            Nobles: @Model.Nobles %
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

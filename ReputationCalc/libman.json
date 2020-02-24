@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "twitter-bootstrap@4.3.1",
+      "destination": "wwwroot/lib/",
+      "files": [
+        "js/bootstrap.min.js",
+        "js/bootstrap.bundle.js",
+        "css/bootstrap.min.css"
+      ]
+    },
+    {
+      "library": "font-awesome@5.12.1",
+      "destination": "wwwroot/lib/font-awesome/",
+      "files": [
+        "css/all.min.css",
+        "js/fontawesome.min.js",
+        "webfonts/fa-brands-400.ttf",
+        "webfonts/fa-brands-400.woff",
+        "webfonts/fa-brands-400.svg",
+        "webfonts/fa-regular-400.svg",
+        "webfonts/fa-regular-400.ttf",
+        "webfonts/fa-regular-400.woff"
+      ]
+    }
+  ]
+}
