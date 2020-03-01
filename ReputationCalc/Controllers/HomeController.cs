@@ -4,20 +4,52 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.Extensions;
 using ReputationCalc.Models;
+using ReputationController.Interfaces;
+using ReputationData;
 
 namespace ReputationCalc.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private IReputationServices _reputationService;
+
+        public HomeController(IReputationServices reputationServices)
         {
-            return View();
+            _reputationService = reputationServices;
         }
 
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Index(ReputationViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            Reputation reputation = new Reputation
+            {
+                Peasants = model.Peasants,
+                Church = model.Church,
+                Bandits = model.Bandits,
+                Nobles = model.Nobles
+            };
+
+            _reputationService.AddReputation(reputation);
+
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

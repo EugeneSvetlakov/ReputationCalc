@@ -35,7 +35,8 @@ namespace ReputationCalc
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddScoped<IReputationServices, ReputationServices>();
+            // Singleton because of service working InMemory
+            services.AddSingleton<IReputationServices, ReputationServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
