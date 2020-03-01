@@ -1,4 +1,4 @@
-﻿@model ReputationData.Reputation
+﻿@model ReputationViewModel
 
 <div class="container">
     <div class="card text-white bg-secondary mb-3" style="max-width: 540px;">
@@ -12,41 +12,41 @@
                     <div class="progress mt-1" style="height: 40px;">
                         <div class="progress-bar text-dark"
                              role="progressbar"
-                             style="width: @Model.Peasants%;"
-                             aria-valuenow="25"
+                             style="width: @Model.PeasantsInPercent%;"
+                             aria-valuenow=@Model.PeasantsInPercent.ToString("0.00")
                              aria-valuemin="0"
                              aria-valuemax="100">
-                            Peasants: @Model.Peasants %
+                            Peasants: @Model.Peasants
                         </div>
                     </div>
                     <div class="progress mt-1" style="height: 40px;">
                         <div class="progress-bar text-dark"
                              role="progressbar"
-                             style="width: @Model.Church%;"
-                             aria-valuenow="25"
+                             style="width: @Model.ChurchInPercent%;"
+                             aria-valuenow=@Model.ChurchInPercent.ToString("0.00")
                              aria-valuemin="0"
                              aria-valuemax="100">
-                            Church: @Model.Church %
+                            Church: @Model.Church
                         </div>
                     </div>
                     <div class="progress mt-1" style="height: 40px;">
                         <div class="progress-bar text-dark"
                              role="progressbar"
-                             style="width: @Model.Bandits%;"
-                             aria-valuenow="25"
+                             style="width: @Model.BanditsInPercent%;"
+                             aria-valuenow=@Model.BanditsInPercent.ToString("0.00")
                              aria-valuemin="0"
                              aria-valuemax="100">
-                            Bandits: @Model.Bandits %
+                            Bandits: @Model.Bandits
                         </div>
                     </div>
                     <div class="progress mt-1" style="height: 40px;">
                         <div class="progress-bar text-dark"
                              role="progressbar"
-                             style="width: @Model.Nobles%;"
-                             aria-valuenow="25"
+                             style="width: @Model.NoblesInPercent%;"
+                             aria-valuenow=@Model.NoblesInPercent.ToString("0.00")
                              aria-valuemin="0"
                              aria-valuemax="100">
-                            Nobles: @Model.Nobles %
+                            Nobles: @Model.Nobles
                         </div>
                     </div>
                 </div>
