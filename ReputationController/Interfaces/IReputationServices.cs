@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using ReputationData;
 
+
 namespace ReputationController.Interfaces
 {
     public interface IReputationServices
     {
+        #region Methods
+
         int GetMaxAmount();
 
         int GetMinAmount();
@@ -24,5 +27,7 @@ namespace ReputationController.Interfaces
         int GetNoblesReputation();
 
         void AddReputation(Reputation additive);
+        
+        #endregion
     }
 }

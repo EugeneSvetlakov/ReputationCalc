@@ -5,10 +5,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace ReputationCalc.Models
 {
     public class ReputationViewModel
     {
+        #region Properties
+
         public int MaxValue;
 
         public int MinValue;
@@ -39,7 +42,7 @@ namespace ReputationCalc.Models
         public float BanditsInPercent;
 
         public float NoblesInPercent;
+        
+        #endregion
     }
-
-
 }

@@ -4,22 +4,44 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+
 namespace ReputationController.Services
 {
     public class ReputationServices : IReputationServices
     {
+        #region PrivateData
+
         private enum UnderThreshold
         {
-            NoUnder,
-            ItsPeasants,
-            ItsChurch,
-            ItsBandits,
-            ItsNobles
+                NoUnder = 0,
+            ItsPeasants = 1,
+              ItsChurch = 2,
+             ItsBandits = 3,
+              ItsNobles = 4
         }
+
         private Reputation _reputation;
-        private const int _MaxAmount = 1000;
-        private const int _MinAmount = -1000;
-        private const int _ThresholdValue = 500; // = (_MaxAmount - _MinAmount) * 0.75 + _MinAmount;
+
+        private const int _maxAmount = 1000;
+
+        private const int _minAmount = -1000;
+
+        private const int _thresholdValue = 500; // = (_MaxAmount - _MinAmount) * 0.75 + _MinAmount;
+
+        #endregion
+
+
+        #region Fields
+
+        #endregion
+
+
+        #region Properties
+
+        #endregion
+
+
+        #region ClassLifeCycles
 
         public ReputationServices(Reputation reputation)
         {
@@ -31,7 +53,6 @@ namespace ReputationController.Services
         public ReputationServices()
         {
             _reputation = new Reputation();
-
             _reputation.Peasants = 0;
             _reputation.Church = 0;
             _reputation.Bandits = 0;
@@ -39,20 +60,25 @@ namespace ReputationController.Services
 
             CorrectReputation();
         }
+        
+        #endregion
+
+
+        #region Methods
 
         public int GetMaxAmount()
         {
-            return _MaxAmount;
+            return _maxAmount;
         }
 
         public int GetMinAmount()
         {
-            return _MinAmount;
+            return _minAmount;
         }
 
         public int GetThresholdValue()
         {
-            return _ThresholdValue;
+            return _thresholdValue;
         }
 
         public Reputation GetReputation()
@@ -84,12 +110,12 @@ namespace ReputationController.Services
         {
             UnderThreshold beforeSumm = GetUnderThreshold();
 
-            int[] ThresholdArr = GetThresholCorrectingdArr(beforeSumm);
+            int[] thresholdArr = GetThresholCorrectingdArr(beforeSumm);
 
-            AddPeasants(additive.Peasants, ThresholdArr[0]);
-            AddChurch(additive.Church, ThresholdArr[1]);
-            AddBandits(additive.Bandits, ThresholdArr[2]);
-            AddNobles(additive.Nobles, ThresholdArr[3]);
+            AddPeasants(additive.Peasants, thresholdArr[0]);
+            AddChurch(additive.Church, thresholdArr[1]);
+            AddBandits(additive.Bandits, thresholdArr[2]);
+            AddNobles(additive.Nobles, thresholdArr[3]);
 
             CorrectReputation();
         }
@@ -128,7 +154,7 @@ namespace ReputationController.Services
             {
                 curvalue = threshold;
             }
-            else if (value < _MinAmount)
+            else if (value < _minAmount)
             {
                 curvalue = 0;
             }
@@ -145,60 +171,65 @@ namespace ReputationController.Services
 
             if (maxUnderThreshold != UnderThreshold.NoUnder)
             {
-                int[] ThresholdArr = GetThresholCorrectingdArr(maxUnderThreshold);
-                _reputation.Peasants = CorrectAmount(_reputation.Peasants, ThresholdArr[0]);
-                _reputation.Church = CorrectAmount(_reputation.Church, ThresholdArr[1]);
-                _reputation.Bandits = CorrectAmount(_reputation.Bandits, ThresholdArr[2]);
-                _reputation.Nobles = CorrectAmount(_reputation.Nobles, ThresholdArr[3]);
+                int[] thresholdArr = GetThresholCorrectingdArr(maxUnderThreshold);
+
+                _reputation.Peasants = CorrectAmount(_reputation.Peasants, thresholdArr[0]);
+                _reputation.Church = CorrectAmount(_reputation.Church, thresholdArr[1]);
+                _reputation.Bandits = CorrectAmount(_reputation.Bandits, thresholdArr[2]);
+                _reputation.Nobles = CorrectAmount(_reputation.Nobles, thresholdArr[3]);
             }
         }
 
         private static int[] GetThresholCorrectingdArr(UnderThreshold underThreshold)
         {
-            int[] ThresholdArr;
+            int[] thresholdArr;
+
             if (underThreshold == UnderThreshold.NoUnder)
             {
-                ThresholdArr = new int[4] { _MaxAmount, _MaxAmount, _MaxAmount, _MaxAmount };
+                thresholdArr = new int[4] { _maxAmount, _maxAmount, _maxAmount, _maxAmount };
             }
             else
             {
-                ThresholdArr = new int[4] { _ThresholdValue, _ThresholdValue, _ThresholdValue, _ThresholdValue };
+                thresholdArr = new int[4] { _thresholdValue, _thresholdValue, _thresholdValue, _thresholdValue };
 
-                if (underThreshold == UnderThreshold.ItsPeasants) ThresholdArr[0] = _MaxAmount;
-                if (underThreshold == UnderThreshold.ItsChurch) ThresholdArr[1] = _MaxAmount;
-                if (underThreshold == UnderThreshold.ItsBandits) ThresholdArr[2] = _MaxAmount;
-                if (underThreshold == UnderThreshold.ItsNobles) ThresholdArr[3] = _MaxAmount;
+                if (underThreshold == UnderThreshold.ItsPeasants) thresholdArr[0] = _maxAmount;
+                if (underThreshold == UnderThreshold.ItsChurch) thresholdArr[1] = _maxAmount;
+                if (underThreshold == UnderThreshold.ItsBandits) thresholdArr[2] = _maxAmount;
+                if (underThreshold == UnderThreshold.ItsNobles) thresholdArr[3] = _maxAmount;
             }
 
-            return ThresholdArr;
+            return thresholdArr;
         }
 
         private UnderThreshold GetMaxUnderThreshold()
         {
             UnderThreshold result = GetUnderThreshold();
 
-            Dictionary<UnderThreshold, int> UnderThresholdDictionary = new Dictionary<UnderThreshold, int>();
+            Dictionary<UnderThreshold, int> underThresholdDictionary = new Dictionary<UnderThreshold, int>();
 
-            if (_reputation.Peasants > _ThresholdValue)
+            if (_reputation.Peasants > _thresholdValue)
             {
-                UnderThresholdDictionary.Add(UnderThreshold.ItsPeasants, _reputation.Peasants);
-            }
-            if (_reputation.Church > _ThresholdValue)
-            {
-                UnderThresholdDictionary.Add(UnderThreshold.ItsChurch, _reputation.Church);
-            }
-            if (_reputation.Bandits > _ThresholdValue)
-            {
-                UnderThresholdDictionary.Add(UnderThreshold.ItsBandits, _reputation.Bandits);
-            }
-            if (_reputation.Nobles > _ThresholdValue)
-            {
-                UnderThresholdDictionary.Add(UnderThreshold.ItsNobles, _reputation.Nobles);
+                underThresholdDictionary.Add(UnderThreshold.ItsPeasants, _reputation.Peasants);
             }
 
-            if (UnderThresholdDictionary.Count > 0)
+            if (_reputation.Church > _thresholdValue)
             {
-                result = UnderThresholdDictionary.OrderBy(c => c.Value).First().Key;
+                underThresholdDictionary.Add(UnderThreshold.ItsChurch, _reputation.Church);
+            }
+
+            if (_reputation.Bandits > _thresholdValue)
+            {
+                underThresholdDictionary.Add(UnderThreshold.ItsBandits, _reputation.Bandits);
+            }
+
+            if (_reputation.Nobles > _thresholdValue)
+            {
+                underThresholdDictionary.Add(UnderThreshold.ItsNobles, _reputation.Nobles);
+            }
+
+            if (underThresholdDictionary.Count > 0)
+            {
+                result = underThresholdDictionary.OrderBy(c => c.Value).First().Key;
             }
 
             return result;
@@ -208,22 +239,22 @@ namespace ReputationController.Services
         {
             UnderThreshold result = UnderThreshold.NoUnder;
 
-            if (_reputation.Peasants > _ThresholdValue)
+            if (_reputation.Peasants > _thresholdValue)
             {
                 result = UnderThreshold.ItsPeasants;
             }
 
-            if (_reputation.Church > _ThresholdValue)
+            if (_reputation.Church > _thresholdValue)
             {
                 result = UnderThreshold.ItsChurch;
             }
 
-            if (_reputation.Bandits > _ThresholdValue)
+            if (_reputation.Bandits > _thresholdValue)
             {
                 result = UnderThreshold.ItsBandits;
             }
 
-            if (_reputation.Nobles > _ThresholdValue)
+            if (_reputation.Nobles > _thresholdValue)
             {
                 result = UnderThreshold.ItsNobles;
             }
@@ -237,5 +268,6 @@ namespace ReputationController.Services
             return rand.Next(min, max);
         }
 
+        #endregion
     }
 }

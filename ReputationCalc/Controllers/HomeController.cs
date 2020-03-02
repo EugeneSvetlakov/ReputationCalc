@@ -9,16 +9,29 @@ using ReputationCalc.Models;
 using ReputationController.Interfaces;
 using ReputationData;
 
+
 namespace ReputationCalc.Controllers
 {
     public class HomeController : Controller
     {
+        #region PrivateData
+
         private IReputationServices _reputationService;
+
+        #endregion
+
+
+        #region ClassLifeCycles
 
         public HomeController(IReputationServices reputationServices)
         {
             _reputationService = reputationServices;
         }
+
+        #endregion
+
+
+        #region Methods
 
         public IActionResult Privacy()
         {
@@ -57,5 +70,7 @@ namespace ReputationCalc.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        #endregion
     }
 }
