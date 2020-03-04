@@ -1,0 +1,32 @@
+﻿@model ReputationViewModel
+
+<div class="border border-dark p-2">
+    <form asp-action="Index" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <h3>Add Reputation</h3>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="inputPeasants">Peasants</label>
+                <input type="number" asp-for="Peasants" class="form-control"
+                       placeholder="@nameof(Model.Peasants)">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputChurch">Church</label>
+                <input type="number" asp-for="Church" class="form-control"
+                       placeholder="@nameof(Model.Church)">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputBandits">Bandits</label>
+                <input type="number" asp-for="Bandits" class="form-control"
+                       placeholder="@nameof(Model.Bandits)">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputNobles">Nobles</label>
+                <input type="number" asp-for="Nobles" class="form-control"
+                       placeholder="@nameof(Model.Nobles)">
+            </div>
+        </div>
+
+        <input type="submit" class="btn btn-primary btn-lg btn-block" value="Calculate">
+    </form>
+</div>
