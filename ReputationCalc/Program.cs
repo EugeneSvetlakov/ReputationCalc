@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 
-namespace ReputationCalc
+namespace BeastHunterWebApps
 {
     public class Program
     {

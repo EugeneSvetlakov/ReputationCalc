@@ -15,6 +15,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\ItemsController\ItemsController.csproj" />
     <ProjectReference Include="..\ReputationController\ReputationController.csproj" />
   </ItemGroup>
 

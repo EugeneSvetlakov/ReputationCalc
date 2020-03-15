@@ -5,12 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.Extensions;
-using ReputationCalc.Models;
+using BeastHunterWebApps.Models;
 using ReputationController.Interfaces;
 using ReputationData;
 
 
-namespace ReputationCalc.Controllers
+namespace BeastHunterWebApps.Controllers
 {
     public class HomeController : Controller
     {

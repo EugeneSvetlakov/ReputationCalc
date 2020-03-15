@@ -1,0 +1,11 @@
+﻿@model EnemiesViewModel
+
+<div class="container">
+    @foreach (var item in Model.Enemies)
+    {
+        <div class="row">
+            <div>@item.Id</div>
+            <div>@item.Name</div>
+        </div>
+    }
+</div>

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace ReputationCalc.Models
+namespace BeastHunterWebApps.Models
 {
     public class ReputationViewModel
     {

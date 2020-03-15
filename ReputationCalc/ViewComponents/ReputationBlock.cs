@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ReputationCalc.Models;
+using BeastHunterWebApps.Models;
 using ReputationController.Interfaces;
 using ReputationData;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace ReputationCalc.ViewComponents
+namespace BeastHunterWebApps.ViewComponents
 {
     public class ReputationBlock : ViewComponent
     {
