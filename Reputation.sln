@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.1000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReputationData", "Reputation\ReputationData.csproj", "{68648C4B-F0A6-4985-8F51-DE2A0182036B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReputationData", "Reputation\ReputationData.csproj", "{68648C4B-F0A6-4985-8F51-DE2A0182036B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReputationCalc", "ReputationCalc\ReputationCalc.csproj", "{E9EC276C-F16E-4685-874C-D48914EDE009}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeastHunterWebApps", "ReputationCalc\BeastHunterWebApps.csproj", "{E9EC276C-F16E-4685-874C-D48914EDE009}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReputationController", "ReputationController\ReputationController.csproj", "{AC417825-3E02-4BD9-98C9-E558D1109CB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReputationController", "ReputationController\ReputationController.csproj", "{AC417825-3E02-4BD9-98C9-E558D1109CB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
