@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BeastHunterWebApps.Models;
-using ReputationController.Interfaces;
-using ReputationData;
+using BeastHunterControllers.Interfaces;
+using BeastHunterData;
 using System;
 using System.Collections.Generic;
 using System.Linq;

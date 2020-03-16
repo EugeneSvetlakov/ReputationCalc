@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ItemsController.Interfaces;
-using ItemsController.Services;
+using BeastHunterControllers.Interfaces;
+using BeastHunterControllers.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ReputationController.Interfaces;
-using ReputationController.Services;
 
 
 namespace BeastHunterWebApps
@@ -54,6 +52,7 @@ namespace BeastHunterWebApps
             // Singleton because of service working InMemory
             services.AddSingleton<IReputationServices, ReputationServices>();
             services.AddSingleton<IItemServices, ItemServices>();
+            services.AddSingleton<IEnemyServices, EnemyServices>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

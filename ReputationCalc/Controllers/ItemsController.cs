@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ItemsController.Interfaces;
+using BeastHunterControllers.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-
 
 
 namespace BeastHunterWebApps.Controllers
 {
-    public class EnemyItemsController : Controller
+    public class ItemsController : Controller
     {
         #region PrivateData
 
@@ -20,7 +19,7 @@ namespace BeastHunterWebApps.Controllers
 
         #region ClassLifeCycles
 
-        public EnemyItemsController(IItemServices itemServices)
+        public ItemsController(IItemServices itemServices)
         {
             _itemServices = itemServices;
         }

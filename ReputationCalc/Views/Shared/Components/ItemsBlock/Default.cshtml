@@ -1,4 +1,4 @@
-﻿@model EnemiesViewModel
+﻿@model ItemsViewModel
 
 <div class="container">
     <table class="table table-hover">
@@ -6,19 +6,16 @@
             <tr>
                 <th scope="col">Id</th>
                 <th scope="col">Name</th>
-                <th scope="col">Items</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Enemies)
+            @foreach (var item in Model.Items)
             {
                 <tr>
                     <th scope="row">@item.Id</th>
                     <td>@item.Name</td>
-                    <td>[todo] Link to edit Enemy items</td>
                 </tr>
             }
-
         </tbody>
     </table>
 

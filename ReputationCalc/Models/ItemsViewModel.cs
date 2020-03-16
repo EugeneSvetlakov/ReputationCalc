@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace BeastHunterWebApps.Models
 {
-    public class EnemiesViewModel
+    public class ItemsViewModel
     {
-        public List<Enemy> Enemies { get; set; }
+        public List<Item> Items { get; set; }
     }
 }

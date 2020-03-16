@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.Extensions;
 using BeastHunterWebApps.Models;
-using ReputationController.Interfaces;
-using ReputationData;
+using BeastHunterControllers.Interfaces;
+using BeastHunterData;
 
 
 namespace BeastHunterWebApps.Controllers

@@ -15,14 +15,13 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\ItemsController\ItemsController.csproj" />
-    <ProjectReference Include="..\ReputationController\ReputationController.csproj" />
+    <Folder Include="Infrastructure\Interfaces\" />
+    <Folder Include="Infrastructure\Services\" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <Folder Include="Infrastructure\Interfaces\" />
-    <Folder Include="Infrastructure\Services\" />
+    <ProjectReference Include="..\BeastHunterControllers\BeastHunterControllers.csproj" />
   </ItemGroup>
 
 </Project>

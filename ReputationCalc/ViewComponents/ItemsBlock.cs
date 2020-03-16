@@ -9,20 +9,20 @@ using System.Threading.Tasks;
 
 namespace BeastHunterWebApps.ViewComponents
 {
-    public class EnemiesBlock : ViewComponent
+    public class ItemsBlock : ViewComponent
     {
         #region PrivateData
 
-        private readonly IEnemyServices _enemyServices;
+        private readonly IItemServices _itemServices;
 
         #endregion
 
 
         #region ClassLifeCycles
 
-        public EnemiesBlock(IEnemyServices enemyServices)
+        public ItemsBlock(IItemServices itemServices)
         {
-            _enemyServices = enemyServices;
+            _itemServices = itemServices;
         }
 
         #endregion
@@ -32,10 +32,10 @@ namespace BeastHunterWebApps.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            EnemiesViewModel enemiesView = new EnemiesViewModel();
-            enemiesView.Enemies = _enemyServices.GetAll();
+            ItemsViewModel itemsView = new ItemsViewModel();
+            itemsView.Items = _itemServices.GetAll();
 
-            return View(enemiesView);
+            return View(itemsView);
         }
 
         #endregion
