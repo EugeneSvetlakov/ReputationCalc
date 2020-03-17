@@ -1,0 +1,23 @@
+﻿@model Dictionary<Item, int>
+@{
+    ViewData["Title"] = "AddItems";
+}
+
+<h1>@ViewData["Title"]</h1>
+<div>
+    Test List
+    <ul>
+        @foreach (var item in Model)
+        {
+            <li>@item.Key.Id) @item.Key.Name: chance = @item.Value</li>
+        }
+    </ul>
+</div>
+<div class="p-3">
+    <a class="btn btn-primary btn-lg btn-block"
+       asp-area=""
+       asp-controller="Enemy"
+       asp-action="Index">
+        Go Back
+    </a>
+</div>
