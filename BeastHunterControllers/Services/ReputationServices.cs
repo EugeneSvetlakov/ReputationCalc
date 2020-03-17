@@ -108,7 +108,7 @@ namespace BeastHunterControllers.Services
 
         public void AddReputation(Reputation additive)
         {
-            UnderThreshold beforeSumm = GetUnderThreshold();
+            UnderThreshold beforeSumm = GetMaxUnderThreshold();
 
             int[] thresholdArr = GetThresholCorrectingdArr(beforeSumm);
 
@@ -203,7 +203,7 @@ namespace BeastHunterControllers.Services
 
         private UnderThreshold GetMaxUnderThreshold()
         {
-            UnderThreshold result = GetUnderThreshold();
+            UnderThreshold result = UnderThreshold.NoUnder;
 
             Dictionary<UnderThreshold, int> underThresholdDictionary = new Dictionary<UnderThreshold, int>();
 
@@ -230,33 +230,6 @@ namespace BeastHunterControllers.Services
             if (underThresholdDictionary.Count > 0)
             {
                 result = underThresholdDictionary.OrderBy(c => c.Value).First().Key;
-            }
-
-            return result;
-        }
-
-        private UnderThreshold GetUnderThreshold()
-        {
-            UnderThreshold result = UnderThreshold.NoUnder;
-
-            if (_reputation.Peasants > _thresholdValue)
-            {
-                result = UnderThreshold.ItsPeasants;
-            }
-
-            if (_reputation.Church > _thresholdValue)
-            {
-                result = UnderThreshold.ItsChurch;
-            }
-
-            if (_reputation.Bandits > _thresholdValue)
-            {
-                result = UnderThreshold.ItsBandits;
-            }
-
-            if (_reputation.Nobles > _thresholdValue)
-            {
-                result = UnderThreshold.ItsNobles;
             }
 
             return result;
