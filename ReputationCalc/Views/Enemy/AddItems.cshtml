@@ -1,16 +1,23 @@
-﻿@model Dictionary<Item, int>
+﻿@model EnemyItemsViewModel
 @{
     ViewData["Title"] = "AddItems";
 }
 
 <h1>@ViewData["Title"]</h1>
-<div>
-    Test List
+<div class="container">
     <ul>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Items)
         {
-            <li>@item.Key.Id) @item.Key.Name: chance = @item.Value</li>
+            <li>
+                @item.Id) @item.Name
+                <a asp-action="AddItem"
+                   asp-route-enemy="@Model.EnemyId"
+                   asp-route-item="@item.Id">
+                    <i class="fas fa-plus-square"></i>
+                </a>
+            </li>
         }
+
     </ul>
 </div>
 <div class="p-3">

@@ -6,6 +6,7 @@
             <tr>
                 <th scope="col">Id</th>
                 <th scope="col">Name</th>
+                <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -14,8 +15,23 @@
                 <tr>
                     <th scope="row">@item.Id</th>
                     <td>@item.Name</td>
+                    <td>
+                        <a asp-area=""
+                           asp-controller="Items"
+                           asp-action="Edit"
+                           asp-route-id="@item.Id">
+                            <i class="fas fa-pen-square"></i>
+                        </a>
+                        <a asp-area=""
+                           asp-controller="Items"
+                           asp-action="Delete"
+                           asp-route-id="@item.Id">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </td>
                 </tr>
             }
+            
         </tbody>
     </table>
 

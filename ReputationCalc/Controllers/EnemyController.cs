@@ -86,54 +86,31 @@ namespace BeastHunterWebApps.Controllers
                     .Where(i => !_enemyServices
                         .GetById(enemy)
                         .EnemyItems.Any(ie => ie.Key.Id == i.Id));
-
             }
 
-            Dictionary<Item, int> model = new Dictionary<Item, int>();
-
-            foreach (var element in itemslist)
+            EnemyItemsViewModel model = new EnemyItemsViewModel
             {
-                model.Add(element, 0);
-            }
+                EnemyId = enemy,
+                Items = itemslist
+            };
 
             return View(model); //need model contain list of available Items with
         }
 
-        [HttpPost]
-        public IActionResult AddItems(int enemy, int item, int chance)
+        [HttpGet]
+        public IActionResult AddItem(int enemy, int item)
         {
             //ToDo
 
             _enemyServices.AddItemToEnemy(
                 enemy,
                 _itemServices.GetById(item),
-                chance
+                0
                 );
 
-            IEnumerable<Item> itemslist;
+            var test = _enemyServices.GetById(enemy);
 
-            if (_enemyServices.GetById(enemy) == null)
-            {
-                itemslist = _itemServices.GetAll();
-            }
-            else
-            {
-                itemslist = _itemServices
-                    .GetAll()
-                    .Where(i => !_enemyServices
-                        .GetById(enemy)
-                        .EnemyItems.Any(ie => ie.Key.Id == i.Id));
-
-            }
-
-            Dictionary<Item, int> model = new Dictionary<Item, int>();
-
-            foreach (var element in itemslist)
-            {
-                model.Add(element, 0);
-            }
-
-            return View(model);
+            return RedirectToAction("AddItems", "Enemy", new { enemy = enemy });
         }
 
         [HttpGet]

@@ -22,7 +22,8 @@
                             {
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     @item.Key.Id @item.Key.Name
-                                    <i class="fas fa-trash-alt"></i> (need add action)
+                                    <a href="#"><i class="fas fa-trash-alt"></i></a>
+                                    <a href="#"><i class="fas fa-pen-square"></i></a> (need add action)
                                     <span class="badge badge-primary badge-pill">@item.Value</span>
 
                                 </li>
@@ -31,7 +32,7 @@
                                 <a asp-area=""
                                    asp-controller="Enemy"
                                    asp-action="AddItems"
-                                   asp-route-id="@enemy.Id">
+                                   asp-route-enemy="@enemy.Id">
                                     <i class="fas fa-plus-square"></i>
                                 </a>
                             </li>
