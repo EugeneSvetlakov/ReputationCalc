@@ -1,0 +1,19 @@
+﻿@model EnemyItemWithChanceViewModel
+@{
+    ViewData["Title"] = "Generated Item";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="border border-dark p-2">
+    Enemy: @Model.EnemyName droped item @Model.ItemName having chance @Model.Chance
+</div>
+
+    <div class="p-3">
+        <a class="btn btn-primary btn-lg btn-block"
+           asp-area=""
+           asp-controller="Enemy"
+           asp-action="Index">
+            Go Back
+        </a>
+    </div>

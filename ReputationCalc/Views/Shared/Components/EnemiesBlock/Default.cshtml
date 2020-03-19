@@ -15,23 +15,35 @@
             {
                 <tr>
                     <th scope="row">@enemy.Id</th>
-                    <td>@enemy.Name</td>
+                    <td>
+                        @enemy.Name
+                        <a asp-action="GenerateItem" asp-route-id="@enemy.Id">
+                            <span style="font-size: 2rem;"><i class="fas fa-random"></i> Generate</span>
+                        </a>
+                    </td>
                     <td>
                         <ul class="list-group">
                             @foreach (var item in enemy.EnemyItems)
                             {
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    @item.Key.Id @item.Key.Name
-                                    <a href="#"><i class="fas fa-trash-alt"></i></a>
-                                    <a href="#"><i class="fas fa-pen-square"></i></a> (need add action)
-                                    <span class="badge badge-primary badge-pill">@item.Value</span>
-
+                                    @item.Key.Id) @item.Key.Name
+                                    <a asp-action="EditItemChance"
+                                       asp-route-enemy="@enemy.Id"
+                                       asp-route-item="@item.Key.Id">
+                                        <i class="fas fa-pen-square"></i>
+                                    </a>
+                                    <a asp-action="DeleteItem"
+                                       asp-route-enemy="@enemy.Id"
+                                       asp-route-item="@item.Key.Id">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                    Chance: <span class="badge badge-primary badge-pill">@item.Value</span>
                                 </li>
                             }
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <a asp-area=""
                                    asp-controller="Enemy"
-                                   asp-action="AddItems"
+                                   asp-action="AvailableItems"
                                    asp-route-enemy="@enemy.Id">
                                     <i class="fas fa-plus-square"></i>
                                 </a>

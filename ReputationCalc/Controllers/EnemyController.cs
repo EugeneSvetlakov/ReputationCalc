@@ -70,7 +70,7 @@ namespace BeastHunterWebApps.Controllers
         }
 
         [HttpGet]
-        public IActionResult AddItems(int enemy)
+        public IActionResult AvailableItems(int enemy)
         {
             //ToDo
             IEnumerable<Item> itemslist;
@@ -94,24 +94,9 @@ namespace BeastHunterWebApps.Controllers
                 Items = itemslist
             };
 
-            return View(model); //need model contain list of available Items with
+            return View(model);
         }
 
-        [HttpGet]
-        public IActionResult AddItem(int enemy, int item)
-        {
-            //ToDo
-
-            _enemyServices.AddItemToEnemy(
-                enemy,
-                _itemServices.GetById(item),
-                0
-                );
-
-            var test = _enemyServices.GetById(enemy);
-
-            return RedirectToAction("AddItems", "Enemy", new { enemy = enemy });
-        }
 
         [HttpGet]
         public IActionResult Edit(int id)
@@ -148,6 +133,90 @@ namespace BeastHunterWebApps.Controllers
         public IActionResult Delete(int id)
         {
             _enemyServices.Delete(id);
+
+            return RedirectToAction("Index", "Enemy");
+        }
+
+        [HttpGet]
+        public IActionResult GenerateItem(int id)
+        {
+            Item item = _enemyServices.GenerateItem(id);
+            var enemy = _enemyServices.GetById(id);
+
+            EnemyItemWithChanceViewModel model = 
+                new EnemyItemWithChanceViewModel
+                {
+                    EnemyId = id,
+                    EnemyName = enemy.Name,
+                    ItemId = item.Id,
+                    ItemName = item.Name,
+                    Chance = enemy.EnemyItems.First(i => i.Key == item).Value
+                };
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult AddItem(int enemy, int item)
+        {
+            _enemyServices.AddItemToEnemy(
+                enemy,
+                _itemServices.GetById(item),
+                0
+                );
+
+            var test = _enemyServices.GetById(enemy);
+
+            return RedirectToAction("AvailableItems", "Enemy", new { enemy = enemy });
+        }
+
+        [HttpGet]
+        public IActionResult EditItemChance(int enemy, int item)
+        {
+            var enemyName = _enemyServices.GetById(enemy).Name;
+
+            var enemyItem = _enemyServices
+                .GetById(enemy)
+                .EnemyItems
+                .First(i => i.Key == _itemServices.GetById(item));
+
+            EnemyItemWithChanceViewModel model = new EnemyItemWithChanceViewModel
+            {
+                EnemyId = enemy,
+                EnemyName = enemyName,
+                ItemId = item,
+                ItemName = enemyItem.Key.Name,
+                Chance = enemyItem.Value
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult EditItemChance(EnemyItemWithChanceViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            _enemyServices
+                .UpdateItemOnEnemy(model.EnemyId,
+                _itemServices.GetById(model.ItemId),
+                model.Chance);
+
+            return RedirectToAction("Index", "Enemy");
+        }
+
+        [HttpGet]
+        public IActionResult DeleteItem(int enemy, int item)
+        {
+            var itemToDelete = _itemServices.GetById(item);
+
+            if (itemToDelete != null)
+            {
+                _enemyServices.DeleteItemFromEnemy(enemy, itemToDelete);
+            }
 
             return RedirectToAction("Index", "Enemy");
         }

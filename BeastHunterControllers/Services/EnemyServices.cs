@@ -1,6 +1,7 @@
 ﻿using BeastHunterControllers.Interfaces;
 using BeastHunterData;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -107,6 +108,49 @@ namespace BeastHunterControllers.Services
             {
                 _enemies.Find(e => e.Id == id).EnemyItems.Remove(item);
             }
+        }
+
+        public Item GenerateItem(int id)
+        {
+            var result = new Item();
+            var enemy = GetById(id);
+            var ChanceRange = enemy.EnemyItems.Values.Sum();
+            var ChancePoint = ChanceRange;
+            Dictionary<Item, int> ChanceDictionary = new Dictionary<Item, int>();
+            foreach (var item in enemy.EnemyItems)
+            {
+                ChanceDictionary.Add(item.Key, item.Value);
+            };
+            var length = ChanceDictionary.Count;
+
+            for (int i = length - 1; i >= 0; i--)
+            {
+                var beforeChange = ChanceDictionary[ChanceDictionary.ElementAt(i).Key];
+                ChanceDictionary[ChanceDictionary.ElementAt(i).Key] = ChancePoint;
+                ChancePoint -= beforeChange;
+            }
+
+            var rndnumber = GetRandomNumber(0, ChanceRange);
+            
+            for (int i = 0; i < length; i++)
+            {
+                var DicKey = ChanceDictionary.ElementAt(i).Key;
+                if (rndnumber >= ChancePoint 
+                    && rndnumber < ChanceDictionary[DicKey])
+                {
+                    result = DicKey;
+                }
+                
+                ChancePoint += ChanceDictionary[DicKey];
+            }
+            
+            return result;
+        }
+
+        private int GetRandomNumber(int min, int max)
+        {
+            Random rand = new Random((int)DateTime.Now.Ticks);
+            return rand.Next(min, max);
         }
 
         #endregion

@@ -1,0 +1,44 @@
+﻿@model EnemyItemWithChanceViewModel
+@{
+    ViewData["Title"] = "Edit Item Chance";
+}
+
+<h1>@ViewData["Title"]</h1>
+<div class="border border-dark p-2">
+    <form asp-action="EditItemChance" method="post" asp-antiforgery="true">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-row">
+            <div class="form-group col-md-6 invisible">
+                <label for="inputId">EnemyId</label>
+                <input type="number" readonly asp-for="EnemyId" class="form-control"
+                       placeholder="@nameof(Model.EnemyId)">
+                <span asp-validation-for="EnemyId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputName">EnemyName</label>
+                <input type="text" readonly asp-for="EnemyName" class="form-control"
+                       placeholder="@nameof(Model.EnemyName)">
+                <span asp-validation-for="EnemyName" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6 invisible">
+                <label for="inputId">ItemId</label>
+                <input type="number" readonly asp-for="ItemId" class="form-control"
+                       placeholder="@nameof(Model.ItemId)">
+                <span asp-validation-for="ItemId" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputName">ItemName</label>
+                <input type="text" readonly asp-for="ItemName" class="form-control"
+                       placeholder="@nameof(Model.ItemName)">
+                <span asp-validation-for="ItemName" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="inputName">Chance</label>
+                <input type="number" asp-for="Chance" class="form-control"
+                       placeholder="@nameof(Model.Chance)">
+                <span asp-validation-for="Chance" class="text-danger"></span>
+            </div>
+            <input type="submit" class="btn btn-primary btn-lg btn-block" value="Update">
+        </div>
+    </form>
+</div>
