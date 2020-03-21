@@ -102,6 +102,17 @@ namespace BeastHunterWebApps.Controllers
 
         public IActionResult Delete(int id)
         {
+            var deletingItem = _itemServices.GetById(id);
+            var enemiesHavingDeletingItem = _enemyServices.GetAll().Where(e => e.EnemyItems.ContainsKey(deletingItem));
+
+            if (enemiesHavingDeletingItem != null)
+            {
+                foreach (var enemy in enemiesHavingDeletingItem)
+                {
+                    _enemyServices.DeleteItemFromEnemy(enemy.Id, deletingItem);
+                }
+            }
+
             _itemServices.Delete(id);
 
             return RedirectToAction("Index", "Items");

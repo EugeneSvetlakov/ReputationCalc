@@ -150,7 +150,7 @@ namespace BeastHunterWebApps.Controllers
                     EnemyName = enemy.Name,
                     ItemId = item.Id,
                     ItemName = item.Name,
-                    Chance = enemy.EnemyItems.First(i => i.Key == item).Value
+                    Chance = enemy.EnemyItems.FirstOrDefault(i => i.Key == item).Value
                 };
 
             return View(model);

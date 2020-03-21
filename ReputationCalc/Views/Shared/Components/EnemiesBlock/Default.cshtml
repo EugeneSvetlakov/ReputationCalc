@@ -16,10 +16,10 @@
                 <tr>
                     <th scope="row">@enemy.Id</th>
                     <td>
-                        @enemy.Name
                         <a asp-action="GenerateItem" asp-route-id="@enemy.Id">
-                            <span style="font-size: 2rem;"><i class="fas fa-random"></i> Generate</span>
+                            <span style="font-size: 2rem;"><i class="fas fa-dice"></i></span>
                         </a>
+                        @enemy.Name
                     </td>
                     <td>
                         <ul class="list-group">

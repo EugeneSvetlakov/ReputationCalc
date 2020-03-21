@@ -114,7 +114,25 @@ namespace BeastHunterControllers.Services
         {
             var result = new Item();
             var enemy = GetById(id);
+            if (enemy.EnemyItems.Count == 0)
+            {
+                return new Item
+                {
+                    Id = -1,
+                    Name = "[No Items Error: Enemy must have minimum 1 Item]"
+                };
+            }
+
             var ChanceRange = enemy.EnemyItems.Values.Sum();
+            if(ChanceRange <= 0)
+            {
+                return new Item
+                {
+                    Id = -2,
+                    Name = "[Null Chance Error: Enemy must have minimum 1 Item with chance > 0]"
+                };
+            }
+
             var ChancePoint = ChanceRange;
             Dictionary<Item, int> ChanceDictionary = new Dictionary<Item, int>();
             foreach (var item in enemy.EnemyItems)
@@ -141,7 +159,7 @@ namespace BeastHunterControllers.Services
                     result = DicKey;
                 }
                 
-                ChancePoint += ChanceDictionary[DicKey];
+                ChancePoint = ChanceDictionary[DicKey];
             }
             
             return result;

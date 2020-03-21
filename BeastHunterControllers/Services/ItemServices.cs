@@ -86,7 +86,7 @@ namespace BeastHunterControllers.Services
 
         public void Delete(int id)
         {
-            if(_items.Exists(i => i.Id == id))
+            if (_items.Exists(i => i.Id == id))
             {
                 _items.Remove(_items.Find(i => i.Id == id));
             }
