@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
+using SqliteStorage;
 
 namespace BeastHunterWebApps
 {
@@ -15,11 +16,31 @@ namespace BeastHunterWebApps
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            var host = BuildWebHost(args);
+
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                try
+                {
+                    SqliteDbContext context = services.GetRequiredService<SqliteDbContext>();
+
+                    DbInitializer.Initialize(context);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($@"Error on initialize Db: {ex.ToString()}");
+                }
+            }
+
+                host.Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        private static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+            .UseStartup<Startup>()
+            .Build();
+
     }
 }

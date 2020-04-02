@@ -42,7 +42,10 @@ namespace BeastHunterWebApps.Controllers
         [HttpGet]
         public IActionResult Add()
         {
-            EnemyViewModel model = new EnemyViewModel { Id = -1, Name = "New Enemy Name" };
+            EnemyViewModel model = new EnemyViewModel {
+                Id = -1,
+                Name = "New Enemy Name"
+            };
 
             return View(model);
         }
@@ -55,13 +58,13 @@ namespace BeastHunterWebApps.Controllers
                 return View(model);
             }
 
-            var newid = _enemyServices.GetAll().OrderByDescending(e => e.Id).First().Id + 1;
+            //var newid = _enemyServices.GetAll().OrderByDescending(e => e.Id).First().Id + 1;
 
             Enemy newenemy = new Enemy
             {
-                Id = newid,
+                //Id = newid,
                 Name = model.Name,
-                EnemyItems = new Dictionary<Item, int>()
+                EnemyItems = new List<EnemyItem>()
             };
 
             _enemyServices.Add(newenemy);
@@ -75,17 +78,21 @@ namespace BeastHunterWebApps.Controllers
             //ToDo
             IEnumerable<Item> itemslist;
 
-            if (_enemyServices.GetById(enemy) == null)
+            if (_enemyServices.GetById(enemy).EnemyItems == null)
             {
                 itemslist = _itemServices.GetAll();
             }
             else
             {
+                //var enemy_items = _enemyServices.GetById(enemy).EnemyItems.Select(i => i.ItemId);
+                //var excluding_items = _itemServices.GetAll().Where(i => !enemy_items.Contains(i.Id));
+                //var not_in_enemy = excluding_items.Select(i => i.Id);
+
                 itemslist = _itemServices
                     .GetAll()
                     .Where(i => !_enemyServices
                         .GetById(enemy)
-                        .EnemyItems.Any(ie => ie.Key.Id == i.Id));
+                        .EnemyItems.Select(e => e.ItemId).Contains(i.Id));
             }
 
             EnemyItemsViewModel model = new EnemyItemsViewModel
@@ -125,7 +132,8 @@ namespace BeastHunterWebApps.Controllers
                 return View(model);
             }
 
-            _enemyServices.GetById(model.Id).Name = model.Name;
+            _enemyServices.Update(new Enemy { Id = model.Id, Name = model.Name });
+                //GetById(model.Id).Name = model.Name;
 
             return RedirectToAction("Index", "Enemy");
         }
@@ -140,17 +148,31 @@ namespace BeastHunterWebApps.Controllers
         [HttpGet]
         public IActionResult GenerateItem(int id)
         {
-            Item item = _enemyServices.GenerateItem(id);
+            var item = _enemyServices.GenerateItem(id);
             var enemy = _enemyServices.GetById(id);
+            string itemName;
+
+            switch (item)
+            {
+                case -1:
+                    itemName = "[No Items Error: Enemy must have minimum 1 Item]";
+                    break;
+                case -2:
+                    itemName = "[Null Chance Error: Enemy must have minimum 1 Item with chance > 0]";
+                    break;
+                default:
+                    itemName = _itemServices.GetById(item).Name;
+                    break;
+            }
 
             EnemyItemWithChanceViewModel model = 
                 new EnemyItemWithChanceViewModel
                 {
                     EnemyId = id,
                     EnemyName = enemy.Name,
-                    ItemId = item.Id,
-                    ItemName = item.Name,
-                    Chance = enemy.EnemyItems.FirstOrDefault(i => i.Key == item).Value
+                    ItemId = item,
+                    ItemName = itemName,
+                    Chance = (item < 0)? 0 : enemy.EnemyItems.FirstOrDefault(i => i.ItemId == item).Chance
                 };
 
             return View(model);
@@ -165,7 +187,7 @@ namespace BeastHunterWebApps.Controllers
                 0
                 );
 
-            var test = _enemyServices.GetById(enemy);
+            //var test = _enemyServices.GetById(enemy);
 
             return RedirectToAction("AvailableItems", "Enemy", new { enemy = enemy });
         }
@@ -178,15 +200,15 @@ namespace BeastHunterWebApps.Controllers
             var enemyItem = _enemyServices
                 .GetById(enemy)
                 .EnemyItems
-                .First(i => i.Key == _itemServices.GetById(item));
+                .First(i => i.ItemId == item);
 
             EnemyItemWithChanceViewModel model = new EnemyItemWithChanceViewModel
             {
                 EnemyId = enemy,
                 EnemyName = enemyName,
                 ItemId = item,
-                ItemName = enemyItem.Key.Name,
-                Chance = enemyItem.Value
+                ItemName = _itemServices.GetById(item).Name,
+                Chance = enemyItem.Chance
             };
 
             return View(model);

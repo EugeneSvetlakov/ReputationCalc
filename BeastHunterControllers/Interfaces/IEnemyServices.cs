@@ -26,7 +26,7 @@ namespace BeastHunterControllers.Interfaces
 
         void DeleteItemFromEnemy(int id, Item item);
 
-        Item GenerateItem(int id);
+        int GenerateItem(int id);
 
         #endregion
     }

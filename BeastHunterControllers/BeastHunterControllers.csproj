@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BeastHunterData\BeastHunterData.csproj" />
+    <ProjectReference Include="..\SqliteStorage\SqliteStorage.csproj" />
   </ItemGroup>
 
 </Project>

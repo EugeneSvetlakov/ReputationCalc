@@ -4,25 +4,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BeastHunterData
 {
-    public class Reputation
+    public class Item
     {
         #region Properties
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
 
         [Required]
-        public int Peasants { get; set; }
-
-        [Required]
-        public int Church { get; set; }
-
-        [Required]
-        public int Bandits { get; set; }
-
-        [Required]
-        public int Nobles { get; set; }
+        public string Name { get; set; }
 
         #endregion
     }

@@ -1,5 +1,7 @@
 ﻿using BeastHunterControllers.Interfaces;
 using BeastHunterData;
+using Microsoft.EntityFrameworkCore;
+using SqliteStorage;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,18 +10,11 @@ using System.Linq;
 
 namespace BeastHunterControllers.Services
 {
-    public class EnemyServices : IEnemyServices
+    public class SqliteEnemyServices : IEnemyServices
     {
         #region PrivateData
 
-        private List<Enemy> _enemies = new List<Enemy>
-        {
-            new Enemy{ Id = 1, Name = "Enemy_1", EnemyItems = new List<EnemyItem>() },
-            new Enemy{ Id = 2, Name = "Enemy_2", EnemyItems = new List<EnemyItem>() },
-            new Enemy{ Id = 3, Name = "Enemy_3", EnemyItems = new List<EnemyItem>() }
-        };
-
-        private List<EnemyItem> _enemyItems = new List<EnemyItem>();
+        private readonly SqliteDbContext _context;
 
         #endregion
 
@@ -36,14 +31,14 @@ namespace BeastHunterControllers.Services
 
         #region ClassLifeCycles
 
-        public EnemyServices()
+        public SqliteEnemyServices()
         {
 
         }
 
-        public EnemyServices(List<Enemy> enemies)
+        public SqliteEnemyServices(SqliteDbContext context)
         {
-            _enemies = enemies ?? throw new ArgumentNullException(nameof(enemies));
+            _context = context;
         }
 
         #endregion
@@ -53,72 +48,93 @@ namespace BeastHunterControllers.Services
 
         public List<Enemy> GetAll()
         {
-            return _enemies;
+            return _context.Enemies
+                .Include(i => i.EnemyItems)
+                .ToList();
         }
 
         public Enemy GetById(int id)
         {
-            return _enemies.FirstOrDefault(i => i.Id == id);
+            return _context.Enemies
+                .Include(i => i.EnemyItems)
+                .FirstOrDefault(i => i.Id == id);
         }
 
         public void Add(Enemy item)
         {
-            if (!_enemies.Contains(item))
+            if (!_context.Enemies.Contains(item))
             {
-                _enemies.Add(item);
+                _context.Enemies.Add(item);
+                _context.SaveChanges();
             }
         }
 
         public void Update(Enemy item)
         {
-            if (_enemies.Exists(i => i.Id == item.Id))
+            if (_context.Enemies.Where(i => i.Id == item.Id).Any())
             {
-                _enemies.Find(i => i.Id == item.Id).Name = item.Name;
+                _context.Enemies.First(i => i.Id == item.Id).Name = item.Name;
+                _context.SaveChanges();
             }
         }
 
         public void Delete(int id)
         {
-            if(_enemies.Exists(i => i.Id == id))
+            if (_context.Enemies.Where(i => i.Id == id).Any())
             {
-                _enemies.Remove(_enemies.Find(i => i.Id == id));
+                _context.Enemies.Remove(_context.Enemies.First(i => i.Id == id));
+                _context.SaveChanges();
             }
         }
 
         public void AddItemToEnemy(int id, Item item, int chance)
         {
-            if(_enemies.Exists(e => e.Id == id) 
-                && !_enemies.Find(e => e.Id == id).EnemyItems.Where(e => e.ItemId == item.Id && e.EnemyId == id).Any())
-            {
-                _enemyItems.Add(new EnemyItem { EnemyId = id, ItemId = item.Id, Chance = chance });
+            bool enemyExist = _context.Enemies.Where(e => e.Id == id).Any();
 
-                _enemies.Find(e => e.Id == id).EnemyItems = _enemyItems.Where(e => e.EnemyId == id).ToList();
+            if (enemyExist)
+            {
+                bool enemyHasItem = (_context.EnemyItems.Where(e => e.EnemyId == id && e.ItemId == item.Id).Any());
+
+                if (!enemyHasItem)
+                {
+                    _context.EnemyItems.Add(new EnemyItem { EnemyId = id, ItemId = item.Id, Chance = chance });
+                    _context.SaveChanges();
+                }
             }
         }
 
         public void UpdateItemOnEnemy(int id, Item item, int chance)
         {
-            if (_enemies.Exists(e => e.Id == id)
-                && _enemies.Find(e => e.Id == id)
-                .EnemyItems.Where(e => e.ItemId == item.Id 
-                                        && e.EnemyId == id).Any())
+            bool enemyExist = _context.Enemies.Where(e => e.Id == id).Any();
+
+            if (enemyExist)
             {
-                _enemyItems.Find(e => e.EnemyId == id && e.ItemId == item.Id).Chance = chance;
+                bool enemyHasItem = (_context.EnemyItems.Where(e => e.EnemyId == id && e.ItemId == item.Id).Any());
 
-                _enemies.Find(e => e.Id == id).EnemyItems = _enemyItems.Where(e => e.EnemyId == id).ToList();
+                if (enemyHasItem)
+                {
+                    _context.EnemyItems
+                        .First(e => e.EnemyId == id && e.ItemId == item.Id)
+                        .Chance = chance;
 
+                    _context.SaveChanges();
+                }
             }
         }
 
         public void DeleteItemFromEnemy(int id, Item item)
         {
-            if (_enemies.Exists(e => e.Id == id)
-                && _enemies.Find(e => e.Id == id).EnemyItems.Where(e => e.ItemId == item.Id
-                                        && e.EnemyId == id).Any())
-            {
-                _enemyItems.Remove(_enemyItems.Find(e => e.ItemId == item.Id && e.EnemyId == id));
+            bool enemyExist = _context.Enemies.Where(e => e.Id == id).Any();
 
-                _enemies.Find(e => e.Id == id).EnemyItems = _enemyItems.Where(e => e.EnemyId == id).ToList();
+            if (enemyExist)
+            {
+                bool enemyHasItem = (_context.EnemyItems.Where(e => e.EnemyId == id && e.ItemId == item.Id).Any());
+
+                if (enemyHasItem)
+                {
+                    _context.EnemyItems.Remove(_context.EnemyItems.First(e => e.ItemId == item.Id && e.EnemyId == id));
+                    _context.SaveChanges();
+                }
 
             }
         }
@@ -137,22 +153,12 @@ namespace BeastHunterControllers.Services
             if (enemy.EnemyItems.Count == 0)
             {
                 return -1;
-                //new Item
-                //{
-                //    Id = -1,
-                //    Name = "[No Items Error: Enemy must have minimum 1 Item]"
-                //};
             }
 
             var ChanceRange = enemy.EnemyItems.Select(e => e.Chance).Sum();
-            if(ChanceRange <= 0)
+            if (ChanceRange <= 0)
             {
                 return -2;
-                //new Item
-                //{
-                //    Id = -2,
-                //    Name = "[Null Chance Error: Enemy must have minimum 1 Item with chance > 0]"
-                //};
             }
 
             var ChancePoint = ChanceRange;
@@ -171,19 +177,19 @@ namespace BeastHunterControllers.Services
             }
 
             var rndnumber = GetRandomNumber(0, ChanceRange);
-            
+
             for (int i = 0; i < length; i++)
             {
                 var DicKey = ChanceDictionary.ElementAt(i).Key;
-                if (rndnumber >= ChancePoint 
+                if (rndnumber >= ChancePoint
                     && rndnumber < ChanceDictionary[DicKey])
                 {
-                    result = DicKey; //new Item {Id = DicKey, Name = $@"item id: {DicKey} with chance: {ChanceDictionary[DicKey]}" }; //DicKey;
+                    result = DicKey;
                 }
-                
+
                 ChancePoint = ChanceDictionary[DicKey];
             }
-            
+
             return result;
         }
 

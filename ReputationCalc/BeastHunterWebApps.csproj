@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BeastHunterControllers\BeastHunterControllers.csproj" />
+    <ProjectReference Include="..\SqliteStorage\SqliteStorage.csproj" />
   </ItemGroup>
 
 </Project>

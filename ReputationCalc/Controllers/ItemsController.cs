@@ -55,11 +55,11 @@ namespace BeastHunterWebApps.Controllers
                 return View(model);
             }
 
-            var newid = _itemServices.GetAll().OrderByDescending(e => e.Id).First().Id + 1;
+            //var newid = _itemServices.GetAll().OrderByDescending(e => e.Id).First().Id + 1;
 
             Item newitem = new Item
             {
-                Id = newid,
+                //Id = newid,
                 Name = model.Name
             };
 
@@ -95,7 +95,8 @@ namespace BeastHunterWebApps.Controllers
                 return View(model);
             }
 
-            _itemServices.GetById(model.Id).Name = model.Name;
+            _itemServices.Update(new Item { Id = model.Id, Name = model.Name });
+            //GetById(model.Id).Name = model.Name;
 
             return RedirectToAction("Index", "Items");
         }
@@ -103,7 +104,7 @@ namespace BeastHunterWebApps.Controllers
         public IActionResult Delete(int id)
         {
             var deletingItem = _itemServices.GetById(id);
-            var enemiesHavingDeletingItem = _enemyServices.GetAll().Where(e => e.EnemyItems.ContainsKey(deletingItem));
+            var enemiesHavingDeletingItem = _enemyServices.GetAll().Where(e => e.EnemyItems.Any(i => i.ItemId == id));
 
             if (enemiesHavingDeletingItem != null)
             {

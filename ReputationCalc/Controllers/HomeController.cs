@@ -65,6 +65,14 @@ namespace BeastHunterWebApps.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public IActionResult SetDefaultReputation()
+        {
+            _reputationService.SetDefaultReputation();
+
+            return RedirectToAction("Index");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

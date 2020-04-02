@@ -27,6 +27,8 @@ namespace BeastHunterControllers.Interfaces
         int GetNoblesReputation();
 
         void AddReputation(Reputation additive);
+
+        void SetDefaultReputation();
         
         #endregion
     }

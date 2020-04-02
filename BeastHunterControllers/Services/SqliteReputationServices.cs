@@ -1,6 +1,7 @@
 ﻿using BeastHunterControllers.Interfaces;
 using BeastHunterData;
 using BeastHunterData.Enum;
+using SqliteStorage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,12 @@ using System.Linq;
 
 namespace BeastHunterControllers.Services
 {
-    public class ReputationServices : IReputationServices
+    public class SqliteReputationServices : IReputationServices
     {
 
         #region PrivateData
 
-        private Reputation _reputation;
+        private readonly SqliteDbContext _context;
 
         private const int _maxAmount = 1000;
 
@@ -36,22 +37,29 @@ namespace BeastHunterControllers.Services
 
         #region ClassLifeCycles
 
-        public ReputationServices(Reputation reputation)
+        public SqliteReputationServices(SqliteDbContext context)
         {
-            _reputation = reputation;
+            _context = context;
+
+            if (!_context.Reputations.Any())
+            {
+                _context.Reputations.Add(new Reputation
+                {
+                    Peasants = 0,
+                    Church = 0,
+                    Bandits = 0,
+                    Nobles = 0
+                });
+
+                _context.SaveChanges();
+            }
 
             CorrectReputation();
         }
 
-        public ReputationServices()
+        public SqliteReputationServices()
         {
-            _reputation = new Reputation();
-            _reputation.Peasants = 0;
-            _reputation.Church = 0;
-            _reputation.Bandits = 0;
-            _reputation.Nobles = 0;
-
-            CorrectReputation();
+            
         }
 
         #endregion
@@ -76,27 +84,27 @@ namespace BeastHunterControllers.Services
 
         public Reputation GetReputation()
         {
-            return _reputation;
+            return _context.Reputations.OrderBy(o => o.Id).FirstOrDefault();
         }
 
         public int GetPeasantsReputation()
         {
-            return _reputation.Peasants;
+            return GetReputation().Peasants;
         }
 
         public int GetChurchReputation()
         {
-            return _reputation.Church;
+            return GetReputation().Church;
         }
 
         public int GetBanditsReputation()
         {
-            return _reputation.Bandits;
+            return GetReputation().Bandits;
         }
 
         public int GetNoblesReputation()
         {
-            return _reputation.Nobles;
+            return GetReputation().Nobles;
         }
 
         public void AddReputation(Reputation additive)
@@ -115,22 +123,30 @@ namespace BeastHunterControllers.Services
 
         private void AddPeasants(int amount, int threshold)
         {
-            _reputation.Peasants = CorrectAmount(_reputation.Peasants + amount, threshold);
+            _context.Reputations.OrderBy(o => o.Id).FirstOrDefault().Peasants = CorrectAmount(GetPeasantsReputation() + amount, threshold);
+
+            _context.SaveChanges();
         }
 
         private void AddChurch(int amount, int threshold)
         {
-            _reputation.Church = CorrectAmount(_reputation.Church + amount, threshold);
+            _context.Reputations.OrderBy(o => o.Id).FirstOrDefault().Church = CorrectAmount(GetChurchReputation() + amount, threshold);
+
+            _context.SaveChanges();
         }
 
         private void AddBandits(int amount, int threshold)
         {
-            _reputation.Bandits = CorrectAmount(_reputation.Bandits + amount, threshold);
+            _context.Reputations.OrderBy(o => o.Id).FirstOrDefault().Bandits = CorrectAmount(GetBanditsReputation() + amount, threshold);
+
+            _context.SaveChanges();
         }
 
         private void AddNobles(int amount, int threshold)
         {
-            _reputation.Nobles = CorrectAmount(_reputation.Nobles + amount, threshold);
+            _context.Reputations.OrderBy(o => o.Id).FirstOrDefault().Nobles = CorrectAmount(GetNoblesReputation() + amount, threshold);
+
+            _context.SaveChanges();
         }
 
         /// <summary>
@@ -166,10 +182,12 @@ namespace BeastHunterControllers.Services
             {
                 int[] thresholdArr = GetThresholCorrectingdArr(maxUnderThreshold);
 
-                _reputation.Peasants = CorrectAmount(_reputation.Peasants, thresholdArr[0]);
-                _reputation.Church = CorrectAmount(_reputation.Church, thresholdArr[1]);
-                _reputation.Bandits = CorrectAmount(_reputation.Bandits, thresholdArr[2]);
-                _reputation.Nobles = CorrectAmount(_reputation.Nobles, thresholdArr[3]);
+                _context.Reputations.OrderBy(o => o.Id).FirstOrDefault().Peasants = CorrectAmount(GetPeasantsReputation(), thresholdArr[0]);
+                _context.Reputations.OrderBy(o => o.Id).FirstOrDefault().Church = CorrectAmount(GetChurchReputation(), thresholdArr[1]);
+                _context.Reputations.OrderBy(o => o.Id).FirstOrDefault().Bandits = CorrectAmount(GetBanditsReputation(), thresholdArr[2]);
+                _context.Reputations.OrderBy(o => o.Id).FirstOrDefault().Nobles = CorrectAmount(GetNoblesReputation(), thresholdArr[3]);
+
+                _context.SaveChanges();
             }
         }
 
@@ -196,28 +214,30 @@ namespace BeastHunterControllers.Services
 
         private UnderThreshold GetMaxUnderThreshold()
         {
+            var reputation = GetReputation();
+
             UnderThreshold result = UnderThreshold.NoUnder;
 
             Dictionary<UnderThreshold, int> underThresholdDictionary = new Dictionary<UnderThreshold, int>();
 
-            if (_reputation.Peasants > _thresholdValue)
+            if (reputation.Peasants > _thresholdValue)
             {
-                underThresholdDictionary.Add(UnderThreshold.ItsPeasants, _reputation.Peasants);
+                underThresholdDictionary.Add(UnderThreshold.ItsPeasants, reputation.Peasants);
             }
 
-            if (_reputation.Church > _thresholdValue)
+            if (reputation.Church > _thresholdValue)
             {
-                underThresholdDictionary.Add(UnderThreshold.ItsChurch, _reputation.Church);
+                underThresholdDictionary.Add(UnderThreshold.ItsChurch, reputation.Church);
             }
 
-            if (_reputation.Bandits > _thresholdValue)
+            if (reputation.Bandits > _thresholdValue)
             {
-                underThresholdDictionary.Add(UnderThreshold.ItsBandits, _reputation.Bandits);
+                underThresholdDictionary.Add(UnderThreshold.ItsBandits, reputation.Bandits);
             }
 
-            if (_reputation.Nobles > _thresholdValue)
+            if (reputation.Nobles > _thresholdValue)
             {
-                underThresholdDictionary.Add(UnderThreshold.ItsNobles, _reputation.Nobles);
+                underThresholdDictionary.Add(UnderThreshold.ItsNobles, reputation.Nobles);
             }
 
             if (underThresholdDictionary.Count > 0)
@@ -236,13 +256,14 @@ namespace BeastHunterControllers.Services
 
         public void SetDefaultReputation()
         {
-            _reputation = new Reputation
-            {
-                Peasants = 0,
-                Church = 0,
-                Bandits = 0,
-                Nobles = 0
-            };
+            var nowReputation = GetReputation();
+
+            nowReputation.Peasants = 0;
+            nowReputation.Church = 0;
+            nowReputation.Bandits = 0;
+            nowReputation.Nobles = 0;
+
+            _context.SaveChanges();
         }
 
         #endregion

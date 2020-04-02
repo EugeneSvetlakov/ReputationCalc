@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using SqliteStorage;
+using Microsoft.EntityFrameworkCore;
 
 namespace BeastHunterWebApps
 {
@@ -50,9 +51,19 @@ namespace BeastHunterWebApps
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // Singleton because of service working InMemory
-            services.AddSingleton<IReputationServices, ReputationServices>();
-            services.AddSingleton<IItemServices, ItemServices>();
-            services.AddSingleton<IEnemyServices, EnemyServices>();
+            //services.AddSingleton<IReputationServices, ReputationServices>();
+            //services.AddSingleton<IItemServices, ItemServices>();
+            //services.AddSingleton<IEnemyServices, EnemyServices>();
+            
+            // Must be Scoped for Db Sqlite
+            services.AddSingleton<IReputationServices, SqliteReputationServices>();
+            services.AddScoped<IItemServices, SqliteItemServices>();
+            services.AddScoped<IEnemyServices, SqliteEnemyServices>();
+            services.AddDbContext<SqliteDbContext>(options => 
+                options.UseSqlite(
+                    Configuration
+                        .GetConnectionString("DefaultConnection"))
+                    );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
